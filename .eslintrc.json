@@ -1,0 +1,83 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "commonjs": true
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "prettier",
+    "react-hooks",
+    "security"
+  ],
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:security/recommended"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "import/no-unresolved": 0,
+    "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
+    "no-var": 2,
+    "max-params": [2, 4],
+    "space-in-parens": 2,
+    "space-before-blocks": 2,
+    "no-trailing-spaces": 1,
+    "key-spacing": 2,
+    "func-names": 2,
+    "eol-last": 1,
+    "no-use-before-define": 2,
+    "vars-on-top": 2,
+    "radix": 2,
+    "no-unused-expressions": 2,
+    "no-redeclare": 2,
+    "no-proto": 2,
+    "no-loop-func": 1,
+    "no-implied-eval": 2,
+    "no-eval": 2,
+    "no-caller": 2,
+    "no-alert": 2,
+    "default-case": 2,
+    "curly": 2,
+    "no-unreachable": 2,
+    "no-extra-semi": 2,
+    "no-empty": 2,
+    "no-dupe-keys": 2,
+    "no-underscore-dangle": 0,
+    "import/extensions": 0,
+    "import/prefer-default-export": 0,
+    "react/prop-types": 0,
+    "class-methods-use-this": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "import/order": 0,
+    "react/jsx-props-no-spreading": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "@typescript-eslint/camelcase": 0,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "max-params": 0
+  }
+}
