@@ -3,14 +3,19 @@ import { AppThunkDispatch } from '../AppThunkDispatch';
 import { clearCart } from './cart';
 import { CartItem } from '../../models/cart-item';
 import { Order } from '../../models/order';
+import { AppState } from '../reducers';
 
 export const addOrder = (items: OrderItem[], amount: number) => async (
-  dispatch: AppThunkDispatch
+  dispatch: AppThunkDispatch,
+  getState: () => AppState
 ) => {
   const date = new Date();
+  const {
+    auth: { token, userId },
+  } = getState();
 
   const response = await fetch(
-    'https://rn-shopping-app-2bed2.firebaseio.com/orders/u1.json',
+    `https://rn-shopping-app-2bed2.firebaseio.com/orders/${userId}.json?auth=${token}`,
     {
       method: 'POST',
       headers: {
@@ -38,10 +43,16 @@ export const addOrder = (items: OrderItem[], amount: number) => async (
   return dispatch(clearCart());
 };
 
-export const getOrders = () => async (dispatch: AppThunkDispatch) => {
+export const getOrders = () => async (
+  dispatch: AppThunkDispatch,
+  getState: () => AppState
+) => {
   try {
+    const {
+      auth: { userId },
+    } = getState();
     const response = await fetch(
-      'https://rn-shopping-app-2bed2.firebaseio.com/orders/u1.json'
+      `https://rn-shopping-app-2bed2.firebaseio.com/orders/${userId}.json`
     );
 
     if (!response.ok) {
@@ -56,7 +67,7 @@ export const getOrders = () => async (dispatch: AppThunkDispatch) => {
 
     let orders: Order[] = [];
 
-    if (Object.keys(resData).length) {
+    if (resData && Object.keys(resData).length) {
       orders = Object.entries(resData).map(
         ([id, { items, amount, date }]: Resp) => {
           const OrderItems = items.map(

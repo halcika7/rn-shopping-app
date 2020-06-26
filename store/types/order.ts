@@ -1,4 +1,5 @@
 import { CartItem } from '../../models/cart-item';
+import { Order } from '../../models/order';
 
 export enum OrderActions {
   ADD_ORDER = 'ADD_ORDER',
@@ -14,7 +15,7 @@ interface AddOrder {
 
 interface GetOrders {
   type: typeof OrderActions.FETCH_ORDERS;
-  payload: { orders: OrderItem[] };
+  payload: { orders: Order[] };
 }
 
 export type OrderActionTypes = AddOrder | GetOrders;

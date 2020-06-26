@@ -1,6 +1,6 @@
 import React from 'react';
 // components
-import { FlatList, Platform, Alert } from 'react-native';
+import { FlatList, Platform, Alert, Text } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/UI/HeaderButton';
 import ProductItem from '../../components/shop/ProductItem';
@@ -16,6 +16,7 @@ import { NavigationProps } from '../../navigation/navigationPropType';
 // actions
 import { DrawerActions } from 'react-navigation-drawer';
 import { deleteProduct } from '../../store/actions';
+import CenteredView from '../../components/UI/CenteredView';
 
 interface Props {
   navigation: NavigationProps;
@@ -39,6 +40,14 @@ const UserProductScreen = ({ navigation }: Props) => {
       },
     ]);
   };
+
+  if (products.length === 0) {
+    return (
+      <CenteredView>
+        <Text>No products found, maybe start creating some?</Text>
+      </CenteredView>
+    );
+  }
 
   return (
     <FlatList

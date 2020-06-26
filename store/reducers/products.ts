@@ -38,20 +38,18 @@ export function ProductsReducer(
       return {
         ...state,
         availableProducts: action.payload.products,
-        userProducts: action.payload.products.filter(
-          prod => prod.ownerId === 'u1'
-        ),
+        userProducts: action.payload.userProducts,
       };
     }
     case ProductActions.CREATE_PRODUCT: {
-      const { description, imageUrl, price, title, id } = action.payload;
+      const data = action.payload;
       const newProduct = new Product(
-        id,
-        'u1',
-        title,
-        imageUrl,
-        description,
-        price
+        data.id,
+        data.ownerId,
+        data.title,
+        data.imageUrl,
+        data.description,
+        data.price
       );
       return {
         ...state,

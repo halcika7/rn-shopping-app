@@ -13,6 +13,7 @@ import EditProductScreen from '../screens/user/EditProductScreen';
 // components
 import { Ionicons } from '@expo/vector-icons';
 import colors from '../constants/colors';
+import AuthScreen from '../screens/user/AuthScreen';
 
 const defaultNavigationOptions = {
   headerStyle: {
@@ -81,5 +82,14 @@ export const AdminNavigator = createStackNavigator(
         />
       ),
     },
+  }
+);
+
+export const AuthNavigator = createStackNavigator(
+  {
+    Auth: AuthScreen,
+  },
+  {
+    defaultNavigationOptions,
   }
 );

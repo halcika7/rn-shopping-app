@@ -6,7 +6,7 @@ import { store } from './store';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 
-import Naviagtion from './navigation';
+import Navigation from './navigation/MainNavigator';
 
 const fetchFonts = async () =>
   Font.loadAsync({
@@ -28,7 +28,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <Naviagtion />
+      <Navigation />
     </Provider>
   );
 }

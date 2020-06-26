@@ -16,3 +16,5 @@ web-report/
 node_modules
 
 yarn*
+
+.env

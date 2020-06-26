@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 import { Property } from '../../forms/formReducer';
+import { AuthProperty } from '../../forms/authReducer';
 
 const styles = StyleSheet.create({
   formControl: {
@@ -31,13 +32,14 @@ interface Props {
   error: string;
   dirty: boolean;
   valid: boolean;
-  property: Property;
-  onTextChange: (val: string, property: Property) => void;
-  keyboard?: 'decimal-pad' | 'default';
+  property: Property | AuthProperty;
+  onTextChange: (val: string, property: any) => void;
+  keyboard?: 'decimal-pad' | 'default' | 'email-address';
   autoCapitalize?: 'sentences' | 'none';
   autoCorrect?: boolean;
   multiline?: boolean;
   numberOfLines?: number;
+  secureTextEntry?: boolean;
 }
 
 const FormControl = ({
@@ -53,6 +55,7 @@ const FormControl = ({
   autoCorrect = false,
   multiline = false,
   numberOfLines = 1,
+  secureTextEntry = false,
 }: Props) => {
   return (
     <View style={styles.formControl}>
@@ -71,6 +74,7 @@ const FormControl = ({
         keyboardType={keyboard}
         multiline={multiline}
         numberOfLines={numberOfLines}
+        secureTextEntry={secureTextEntry}
       />
       {!valid && dirty && <Text style={styles.invalidText}>{error}</Text>}
     </View>

@@ -23,7 +23,7 @@ export interface UpdateProductType extends UpdateProductI {
 
 interface GetProducts {
   type: typeof ProductActions.GET_PRODUCTS;
-  payload: { products: Product[] };
+  payload: { products: Product[]; userProducts: Product[] };
 }
 
 interface DeleteProduct {
@@ -33,7 +33,7 @@ interface DeleteProduct {
 
 interface CreateProduct {
   type: typeof ProductActions.CREATE_PRODUCT;
-  payload: CreateProductType & { id: string };
+  payload: CreateProductType & { id: string; ownerId: string };
 }
 
 interface UpdateProduct {

@@ -7,7 +7,6 @@ import {
   Platform,
   Alert,
   KeyboardAvoidingView,
-  ActivityIndicator,
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/UI/HeaderButton';
@@ -17,11 +16,11 @@ import FormControl from '../../components/UI/FormControl';
 import { AppState } from '../../store/reducers';
 import { NavigationProps } from '../../navigation/navigationPropType';
 import {
-  formReducer,
   Property,
-  FormActions,
   getInitialFormState,
+  FormState,
 } from '../../forms/formReducer';
+import { formReducer, FormActions } from '../../forms/formDefaults';
 
 // hooks
 import { useSelector } from 'react-redux';
@@ -48,7 +47,7 @@ const EditProductScreen = ({ navigation }: Props) => {
   );
   const dispatch = useThunkDispatch();
   const [formState, reducerDispatch] = useReducer(
-    formReducer,
+    formReducer<FormState>(),
     getInitialFormState(prod)
   );
 
