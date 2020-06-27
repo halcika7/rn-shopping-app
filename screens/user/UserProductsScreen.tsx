@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // components
 import { FlatList, Platform, Alert, Text } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -11,22 +11,18 @@ import { useThunkDispatch } from '../../store/AppThunkDispatch';
 
 // types
 import { AppState } from '../../store/reducers';
-import { NavigationProps } from '../../navigation/navigationPropType';
 
 // actions
-import { DrawerActions } from 'react-navigation-drawer';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { deleteProduct } from '../../store/actions';
 import CenteredView from '../../components/UI/CenteredView';
 
-interface Props {
-  navigation: NavigationProps;
-}
-
-const UserProductScreen = ({ navigation }: Props) => {
+const UserProductScreen = () => {
   const products = useSelector(
     (state: AppState) => state.products.userProducts
   );
   const dispatch = useThunkDispatch();
+  const navigation = useNavigation();
 
   const deleteHandler = (id: string) => {
     Alert.alert('Are you sure?', 'Do you really want to delete this item?', [
@@ -40,6 +36,30 @@ const UserProductScreen = ({ navigation }: Props) => {
       },
     ]);
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Cart"
+            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+          />
+        </HeaderButtons>
+      ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Add"
+            iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+            onPress={() => navigation.navigate('EditProduct')}
+          />
+        </HeaderButtons>
+      ),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (products.length === 0) {
     return (
@@ -70,32 +90,8 @@ const UserProductScreen = ({ navigation }: Props) => {
   );
 };
 
-UserProductScreen.navigationOptions = ({
-  navigation,
-}: {
-  navigation: NavigationProps;
-}) => {
-  return {
-    headerTitle: 'All Products',
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Cart"
-          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-          onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-        />
-      </HeaderButtons>
-    ),
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Add"
-          iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
-          onPress={() => navigation.navigate('EditProduct')}
-        />
-      </HeaderButtons>
-    ),
-  };
+export const screenOptions = {
+  headerTitle: 'All Products',
 };
 
 export default UserProductScreen;

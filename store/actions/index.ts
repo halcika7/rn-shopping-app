@@ -11,4 +11,4 @@ export {
   removeFromCartDeleted,
 } from './cart';
 export { addOrder, getOrders } from './order';
-export { signUp, logIn, authSuccess } from './auth';
+export { signUp, logIn, authSuccess, authAutoTried } from './auth';

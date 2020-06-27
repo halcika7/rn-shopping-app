@@ -3,9 +3,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useThunkDispatch } from '../../store/AppThunkDispatch';
 import { addToCart } from '../../store/actions';
+import { useRoute } from '@react-navigation/native';
 
 // types
-import { WithNavigation } from '../../navigation/navigationPropType';
 import { AppState } from '../../store/reducers';
 import { Product } from '../../models/product';
 
@@ -49,10 +49,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProductDetailScreen = ({ navigation }: WithNavigation) => {
-  const productId = navigation.getParam('productId');
+const ProductDetailScreen = () => {
+  const { params } = useRoute() as { params: { productId: string | null } };
+  const id = params ? params.productId : null;
   const product = useSelector((state: AppState) =>
-    state.products.availableProducts.find(prod => prod.id === productId)
+    state.products.availableProducts.find(prod => prod.id === id)
   ) as Product;
   const dispatch = useThunkDispatch();
 
@@ -74,8 +75,8 @@ const ProductDetailScreen = ({ navigation }: WithNavigation) => {
   );
 };
 
-ProductDetailScreen.navigationOptions = ({ navigation }: WithNavigation) => ({
-  headerTitle: navigation.getParam('productTitle'),
+export const screenOptions = ({ route }: any) => ({
+  headerTitle: route.params.producctTitle,
 });
 
 export default ProductDetailScreen;

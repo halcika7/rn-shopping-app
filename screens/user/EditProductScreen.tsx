@@ -14,7 +14,6 @@ import FormControl from '../../components/UI/FormControl';
 
 // types
 import { AppState } from '../../store/reducers';
-import { NavigationProps } from '../../navigation/navigationPropType';
 import {
   Property,
   getInitialFormState,
@@ -27,6 +26,7 @@ import { useSelector } from 'react-redux';
 import { useThunkDispatch } from '../../store/AppThunkDispatch';
 import { updateProduct, createProduct } from '../../store/actions';
 import Loading from '../../components/UI/Loading';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   form: {
@@ -34,14 +34,12 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props {
-  navigation: NavigationProps;
-}
-
-const EditProductScreen = ({ navigation }: Props) => {
+const EditProductScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>();
-  const id = navigation.getParam('productId');
+  const { params } = useRoute() as { params: { productId: string } };
+  const id = params && params.productId ? params.productId : null;
+  const navigation = useNavigation();
   const prod = useSelector((state: AppState) =>
     state.products.userProducts.find(p => p.id === id)
   );
@@ -69,7 +67,7 @@ const EditProductScreen = ({ navigation }: Props) => {
     setIsLoading(true);
     try {
       if (prod) {
-        await dispatch(updateProduct({ id, ...data }));
+        await dispatch(updateProduct({ id: id as string, ...data }));
       } else {
         await dispatch(createProduct({ ...data, price: +data.price }));
       }
@@ -104,7 +102,19 @@ const EditProductScreen = ({ navigation }: Props) => {
   };
 
   useEffect(() => {
-    navigation.setParams({ submit: submitHandler });
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Save"
+            iconName={
+              Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'
+            }
+            onPress={submitHandler}
+          />
+        </HeaderButtons>
+      ),
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submitHandler]);
 
@@ -190,27 +200,10 @@ const EditProductScreen = ({ navigation }: Props) => {
   );
 };
 
-EditProductScreen.navigationOptions = ({
-  navigation,
-}: {
-  navigation: NavigationProps;
-}) => {
-  const submitFn = navigation.getParam('submit');
+export const screenOptions = ({ route }: { route: any }) => {
+  const params = route.params ? route.params : {};
   return {
-    headerTitle: navigation.getParam('productId')
-      ? 'Edit Product'
-      : 'Add Product',
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Save"
-          iconName={
-            Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'
-          }
-          onPress={submitFn}
-        />
-      </HeaderButtons>
-    ),
+    headerTitle: params.productId ? 'Edit Product' : 'Add Product',
   };
 };
 

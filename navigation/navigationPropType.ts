@@ -1,14 +1,5 @@
-import {
-  NavigationScreenProp,
-  NavigationState,
-  NavigationParams,
-} from 'react-navigation';
-
-export type NavigationProps = NavigationScreenProp<
-  NavigationState,
-  NavigationParams
->;
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export interface WithNavigation {
-  navigation: NavigationProps;
+  navigation: StackNavigationProp<{}>;
 }

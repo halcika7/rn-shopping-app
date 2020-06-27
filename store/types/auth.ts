@@ -2,6 +2,7 @@ export enum AuthActions {
   AUTH_SUCCESS = 'AUTH_SUCCESS',
   AUTH_FAILED = 'AUTH_FAILED',
   LOGOUT = 'LOGOUT',
+  AUTH_AUTO = 'AUTH_AUTO',
 }
 
 interface AuthSuccess {
@@ -19,4 +20,9 @@ interface Logout {
   payload: {};
 }
 
-export type AuthActionTypes = AuthSuccess | AuthFailed | Logout;
+interface AuthAuto {
+  type: typeof AuthActions.AUTH_AUTO;
+  payload: {};
+}
+
+export type AuthActionTypes = AuthSuccess | AuthFailed | Logout | AuthAuto;

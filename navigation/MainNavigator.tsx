@@ -1,38 +1,68 @@
 import React from 'react';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { Platform } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import {
   ProductsNavigator,
   OrdersNavigator,
   AdminNavigator,
-  AuthNavigator,
 } from './ShopNavigator';
 import colors from '../constants/colors';
-import StartupScreen from '../screens/StartupScreen';
 import LogoutButton from '../components/UI/LogoutButton';
+import { Ionicons } from '@expo/vector-icons';
 
-const ShopNavigator = createDrawerNavigator(
-  {
-    Products: ProductsNavigator,
-    Orders: OrdersNavigator,
-    Admin: AdminNavigator,
-  },
-  {
-    contentOptions: {
-      activeTintColor: colors.primary,
-      labelStyle: {
-        fontFamily: 'open-sans-bold',
-      },
-    },
-    contentComponent: props => <LogoutButton {...props} />,
-  }
-);
+const ShopDrawerNavigator = createDrawerNavigator();
 
-const MainNavigator = createSwitchNavigator({
-  Startup: StartupScreen,
-  Auth: AuthNavigator,
-  Shop: ShopNavigator,
-});
-
-export default createAppContainer(MainNavigator);
+export const ShopNavigator = () => {
+  return (
+    <ShopDrawerNavigator.Navigator
+      drawerContent={props => <LogoutButton {...props} />}
+      drawerContentOptions={{
+        activeTintColor: colors.primary,
+        labelStyle: {
+          fontFamily: 'open-sans-bold',
+        },
+      }}
+    >
+      <ShopDrawerNavigator.Screen
+        name="Products"
+        component={ProductsNavigator}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons
+              name={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
+              size={23}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <ShopDrawerNavigator.Screen
+        name="Orders"
+        component={OrdersNavigator}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons
+              name={Platform.OS === 'android' ? 'md-list' : 'ios-list'}
+              size={23}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <ShopDrawerNavigator.Screen
+        name="Admin"
+        component={AdminNavigator}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons
+              name={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+              size={23}
+              color={color}
+            />
+          ),
+        }}
+      />
+    </ShopDrawerNavigator.Navigator>
+  );
+};

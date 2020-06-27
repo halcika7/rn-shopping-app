@@ -22,7 +22,6 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../../store/reducers';
 import { signUp, logIn } from '../../store/actions';
 import Loading from '../../components/UI/Loading';
-import { WithNavigation } from '../../navigation/navigationPropType';
 
 const styles = StyleSheet.create({
   screen: {
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const AuthScreen = ({ navigation }: WithNavigation) => {
+const AuthScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>();
   const [isSignUp, setIsSignuUp] = useState<boolean>(false);
@@ -83,7 +82,7 @@ const AuthScreen = ({ navigation }: WithNavigation) => {
       } else {
         await dispatch(signUp(enteredEmail, enteredPassword));
       }
-      navigation.navigate('Shop');
+      // navigation.navigate('Shop');
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
@@ -177,7 +176,7 @@ const AuthScreen = ({ navigation }: WithNavigation) => {
   );
 };
 
-AuthScreen.navigationOptions = {
+export const screenOptions = {
   headerTitle: 'Authenticate',
 };
 

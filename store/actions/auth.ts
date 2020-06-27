@@ -121,3 +121,8 @@ export const logIn = (email: string, password: string) => async (
     authSuccess({ ...resData, exp: parseInt(resData.expiresIn, 10) * 1000 })
   );
 };
+
+export const authAutoTried = () => ({
+  type: AuthActions.AUTH_AUTO,
+  payload: {},
+});

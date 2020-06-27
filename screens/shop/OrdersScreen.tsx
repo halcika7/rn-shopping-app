@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 // hooks
 import { useSelector } from 'react-redux';
-import { DrawerActions } from 'react-navigation-drawer';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { AppState } from '../../store/reducers';
-import { NavigationProps } from '../../navigation/navigationPropType';
 
 // components
 import { FlatList, Platform, Text } from 'react-native';
@@ -19,11 +18,27 @@ const OrderScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const orders = useSelector((state: AppState) => state.order.orders);
   const dispatch = useThunkDispatch();
+  const navigation = useNavigation();
 
   useEffect(() => {
     setIsLoading(true);
     dispatch(getOrders()).then(() => setIsLoading(false));
   }, [dispatch]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Cart"
+            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+          />
+        </HeaderButtons>
+      ),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return <Loading />;
@@ -45,23 +60,8 @@ const OrderScreen = () => {
   );
 };
 
-OrderScreen.navigationOptions = ({
-  navigation,
-}: {
-  navigation: NavigationProps;
-}) => {
-  return {
-    headerTitle: 'Your Orders',
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Cart"
-          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-          onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-        />
-      </HeaderButtons>
-    ),
-  };
+export const screenOptions = {
+  headerTitle: 'Your Orders',
 };
 
 export default OrderScreen;

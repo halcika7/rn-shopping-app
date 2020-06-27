@@ -5,11 +5,10 @@ import { useThunkDispatch } from '../../store/AppThunkDispatch';
 
 // types
 import { AppState } from '../../store/reducers';
-import { NavigationProps } from '../../navigation/navigationPropType';
 
 // actions
 import { addToCart, getProducts } from '../../store/actions';
-import { DrawerActions } from 'react-navigation-drawer';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 // components
 import { FlatList, Platform } from 'react-native';
@@ -20,11 +19,7 @@ import Loading from '../../components/UI/Loading';
 import NotFound from '../../components/UI/NotFound';
 import ErrorComponent from '../../components/UI/Error';
 
-interface Props {
-  navigation: NavigationProps;
-}
-
-const ProductOverviewScreen = ({ navigation }: Props) => {
+const ProductOverviewScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -32,6 +27,7 @@ const ProductOverviewScreen = ({ navigation }: Props) => {
     (state: AppState) => state.products.availableProducts
   );
   const dispatch = useThunkDispatch();
+  const navigation = useNavigation();
 
   const loadProducts = useCallback(async () => {
     setError('');
@@ -45,10 +41,10 @@ const ProductOverviewScreen = ({ navigation }: Props) => {
   }, [dispatch]);
 
   useEffect(() => {
-    const sub = navigation.addListener('willFocus', () => loadProducts);
+    const unsubscribe = navigation.addListener('focus', () => loadProducts);
 
     return () => {
-      sub.remove();
+      unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadProducts]);
@@ -57,6 +53,30 @@ const ProductOverviewScreen = ({ navigation }: Props) => {
     setIsLoading(true);
     loadProducts().then(() => setIsLoading(false));
   }, [loadProducts]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Cart"
+            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+          />
+        </HeaderButtons>
+      ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Cart"
+            iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
+            onPress={() => navigation.navigate('Cart')}
+          />
+        </HeaderButtons>
+      ),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (error) {
     return (
@@ -86,8 +106,7 @@ const ProductOverviewScreen = ({ navigation }: Props) => {
             dispatch(addToCart(item));
           }}
           onSelect={() => {
-            navigation.navigate({
-              routeName: 'ProductDetail',
+            navigation.navigate('ProductDetail', {
               params: { productId: item.id, productTitle: item.title },
             });
           }}
@@ -97,32 +116,8 @@ const ProductOverviewScreen = ({ navigation }: Props) => {
   );
 };
 
-ProductOverviewScreen.navigationOptions = ({
-  navigation,
-}: {
-  navigation: NavigationProps;
-}) => {
-  return {
-    headerTitle: 'All Products',
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Cart"
-          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-          onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-        />
-      </HeaderButtons>
-    ),
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Cart"
-          iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
-          onPress={() => navigation.navigate('Cart')}
-        />
-      </HeaderButtons>
-    ),
-  };
+export const screenOptions = {
+  headerTitle: 'All Products',
 };
 
 export default ProductOverviewScreen;

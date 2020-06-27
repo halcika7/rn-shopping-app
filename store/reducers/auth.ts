@@ -7,6 +7,7 @@ export interface AuthState {
   };
   token: string;
   userId: string;
+  authAutoTried: boolean;
 }
 
 const INITIAL_STATE: AuthState = {
@@ -16,6 +17,7 @@ const INITIAL_STATE: AuthState = {
   },
   token: '',
   userId: '',
+  authAutoTried: false,
 };
 
 export function AuthReducer(state = INITIAL_STATE, action: AuthActionTypes) {
@@ -25,6 +27,7 @@ export function AuthReducer(state = INITIAL_STATE, action: AuthActionTypes) {
         ...state,
         token: action.payload.token,
         userId: action.payload.userId,
+        authAutoTried: true,
       };
     }
     case AuthActions.AUTH_FAILED: {
@@ -32,10 +35,14 @@ export function AuthReducer(state = INITIAL_STATE, action: AuthActionTypes) {
         ...state,
         email: action.payload.email,
         password: action.payload.password,
+        authAutoTried: false,
       };
     }
     case AuthActions.LOGOUT:
-      return { ...INITIAL_STATE };
+      return { ...INITIAL_STATE, authAutoTried: true };
+    case AuthActions.AUTH_AUTO: {
+      return { ...state, authAutoTried: true };
+    }
     default:
       return state;
   }
